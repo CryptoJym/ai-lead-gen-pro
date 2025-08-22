@@ -335,10 +335,7 @@ export async function collectSocialDataReal(company: Company): Promise<OsintCont
           social.push({
             platform: platform.name,
             url: platform.urlPattern,
-            followers: metrics.followers ? parseInt(metrics.followers.replace(/\D/g, '')) : null,
-            engagement: null,
-            lastPost: null,
-            metrics
+            followers: metrics.followers ? parseInt(metrics.followers.replace(/\D/g, '')) : undefined
           });
         }
       } catch (error) {
