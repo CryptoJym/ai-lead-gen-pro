@@ -1,0 +1,52 @@
+# Development files
+.env.local
+.env.development
+
+# Documentation
+*.md
+docs/
+README.md
+CONTRIBUTING.md
+LICENSE
+
+# Version control
+.git/
+.gitignore
+.gitattributes
+
+# Dependencies (Vercel will install these)
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test files
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Build artifacts (local)
+.next/
+out/
+dist/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
+.eslintcache
+.npm
+.yarn
