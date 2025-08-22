@@ -1,8 +1,8 @@
 {
   "framework": "nextjs",
-  "buildCommand": "./vercel-build.sh",
+  "buildCommand": "npm run build",
   "devCommand": "npm run dev",
-  "installCommand": "echo 'Skipping install, handled by build script'",
+  "installCommand": "npm install --no-optional",
   "regions": ["iad1"],
   "functions": {
     "src/app/api/research/route.ts": {

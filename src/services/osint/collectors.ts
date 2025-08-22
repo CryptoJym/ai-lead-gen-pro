@@ -1,5 +1,12 @@
-import { chromium } from 'playwright';
 import * as cheerio from 'cheerio';
+
+// Optional dependencies
+let chromium: any;
+try {
+  chromium = require('playwright').chromium;
+} catch (e) {
+  console.log('Playwright not available, browser-based collection disabled');
+}
 import { Company, OsintContext } from '@/types';
 
 // API configurations
@@ -20,6 +27,17 @@ const API_CONFIGS = {
 
 // Corporate data collection from various sources
 export async function collectCorporateDataReal(company: Company): Promise<OsintContext['corp']> {
+  if (!chromium) {
+    return {
+      name: company.name,
+      domain: company.domain,
+      founded: null,
+      employees: null,
+      revenue: null,
+      industry: null
+    };
+  }
+  
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
   
@@ -114,6 +132,8 @@ export async function collectNewsDataReal(company: Company): Promise<OsintContex
 }
 
 async function scrapeGoogleNews(companyName: string): Promise<OsintContext['news']> {
+  if (!chromium) return [];
+  
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
   const news: OsintContext['news'] = [];
@@ -192,6 +212,7 @@ export async function collectTechDataReal(company: Company): Promise<OsintContex
 
 async function detectTechFromWebsite(company: Company): Promise<OsintContext['tech']> {
   if (!company.domain && !company.homepageUrl) return [];
+  if (!chromium) return [];
   
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
@@ -299,6 +320,8 @@ function categorizeTech(techName: string): string {
 // Social media presence collection
 export async function collectSocialDataReal(company: Company): Promise<OsintContext['social']> {
   const social: OsintContext['social'] = [];
+  if (!chromium) return social;
+  
   const browser = await chromium.launch({ headless: true });
   
   try {
