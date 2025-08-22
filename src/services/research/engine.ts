@@ -80,7 +80,7 @@ export async function runDeepResearch(request: ResearchRequest): Promise<Researc
   try {
     // Collect OSINT context
     const context = await collectOsintContext({
-      companyName: companyName || '',
+      name: companyName || '',
       domain: companyUrl || '',
       homepageUrl: companyUrl || ''
     });
