@@ -19,7 +19,8 @@
     "DAILY_RESEARCH_CAP_PER_TENANT": "50",
     "MAX_CONCURRENT_RESEARCH_JOBS": "3",
     "ENABLE_CACHE": "true",
-    "ENABLE_LLM_SYNTHESIS": "true"
+    "ENABLE_LLM_SYNTHESIS": "true",
+    "ENABLE_MOCK_MODE": "true"
   },
   "headers": [
     {
@@ -36,6 +37,15 @@
         {
           "key": "Access-Control-Allow-Headers",
           "value": "X-Requested-With, Content-Type, Authorization, X-Client-ID"
+        }
+      ]
+    },
+    {
+      "source": "/docs/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     }
