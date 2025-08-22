@@ -261,12 +261,7 @@ async function detectTechFromWebsite(company: Company): Promise<OsintContext['te
       if (techName) {
         tech.push({
           name: techName,
-          category: categorize
-
-(techName),
           product: techName,
-          vendor: null,
-          version: null,
           slug: techName.toLowerCase().replace(/\s+/g, '-')
         });
       }
