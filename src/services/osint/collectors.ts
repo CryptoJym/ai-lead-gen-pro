@@ -368,7 +368,7 @@ export async function collectProcurementDataReal(company: Company): Promise<Osin
           // Company is registered in SAM.gov
           procurement.push({
             agency: 'Federal (SAM.gov registered)',
-            amount: null,
+            amount: undefined,
             date: data.entityData[0].registrationDate,
             description: 'Registered federal contractor',
             status: data.entityData[0].registrationStatus
