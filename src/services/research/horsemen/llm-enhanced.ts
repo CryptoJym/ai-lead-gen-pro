@@ -29,9 +29,9 @@ Provide specific, actionable findings.`;
   const jobPrompt = `Analyze these job postings to identify automation opportunities:
 
 ${context.jobs.slice(0, 20).map((job, i) => `
-${i + 1}. ${job.title} at ${job.company}
-   Location: ${job.location}
+${i + 1}. ${job.title}
    ${job.text ? `Description excerpt: ${job.text.substring(0, 200)}...` : ''}
+   ${job.url ? `URL: ${job.url}` : ''}
 `).join('\n')}
 
 Identify:
