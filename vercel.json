@@ -14,7 +14,7 @@
     "MAX_CONCURRENT_RESEARCH_JOBS": "3",
     "ENABLE_CACHE": "false",
     "ENABLE_LLM_SYNTHESIS": "false",
-    "ENABLE_MOCK_MODE": "true"
+    "ENABLE_MOCK_MODE": "false"
   },
   "headers": [
     {
