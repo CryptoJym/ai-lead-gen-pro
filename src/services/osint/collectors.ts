@@ -370,8 +370,7 @@ export async function collectProcurementDataReal(company: Company): Promise<Osin
             agency: 'Federal (SAM.gov registered)',
             amount: undefined,
             date: data.entityData[0].registrationDate,
-            description: 'Registered federal contractor',
-            status: data.entityData[0].registrationStatus
+            description: 'Registered federal contractor'
           });
         }
       }
