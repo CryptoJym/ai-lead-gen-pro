@@ -399,10 +399,8 @@ export async function collectArchivesDataReal(company: Company): Promise<OsintCo
       const snapshot = data.archived_snapshots.closest;
       archives.push({
         url: `https://${domain}`,
-        timestamp: snapshot.timestamp,
-        snapshotUrl: snapshot.url,
-        status: snapshot.status,
-        available: snapshot.available
+        date: snapshot.timestamp,
+        snapshotUrl: snapshot.url
       });
       
       // Get more historical snapshots
@@ -417,10 +415,8 @@ export async function collectArchivesDataReal(company: Company): Promise<OsintCo
           const [urlkey, timestamp, original, mimetype, statuscode, digest, length] = cdxData[i];
           archives.push({
             url: original,
-            timestamp,
-            snapshotUrl: `https://web.archive.org/web/${timestamp}/${original}`,
-            status: statuscode,
-            available: true
+            date: timestamp,
+            snapshotUrl: `https://web.archive.org/web/${timestamp}/${original}`
           });
         }
       }
