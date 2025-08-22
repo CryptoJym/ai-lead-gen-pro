@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Lead Gen Pro - Interactive Demo</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .demo-section {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .input-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: #0066cc;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0052a3;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        .progress-container {
+            margin-top: 30px;
+            display: none;
+        }
+        .progress-step {
+            background: #f8f9fa;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+        .progress-step.active {
+            opacity: 1;
+            background: #e3f2fd;
+        }
+        .progress-step.complete {
+            opacity: 1;
+            border-left-color: #4caf50;
+        }
+        .progress-step h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        .progress-step p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .results-container {
+            margin-top: 30px;
+            display: none;
+        }
+        .finding-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .finding-card.high-impact {
+            border-left: 4px solid #ff6b6b;
+        }
+        .finding-card.medium-impact {
+            border-left: 4px solid #ffd93d;
+        }
+        .finding-card.low-impact {
+            border-left: 4px solid #6bcf7f;
+        }
+        .finding-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .finding-title {
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        .confidence-badge {
+            background: #e9ecef;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #495057;
+        }
+        .finding-detail {
+            color: #666;
+            margin: 10px 0;
+        }
+        .tags-container {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .automation-score {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .score-number {
+            font-size: 72px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .score-label {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        .example-companies {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .example-btn {
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .example-btn:hover {
+            border-color: #0066cc;
+            background: #f8f9fa;
+        }
+        .example-btn h5 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        .example-btn p {
+            margin: 0;
+            font-size: 12px;
+            color: #666;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .pulse {
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 AI Lead Gen Pro - Interactive Demo</h1>
+        
+        <div class="demo-section">
+            <h2>Try the System</h2>
+            <p>Experience how AI Lead Gen Pro identifies automation opportunities in businesses.</p>
+            
+            <div class="button-group">
+                <button class="btn-primary" onclick="setMode('opportunity')">🔍 Opportunity Search</button>
+                <button class="btn-secondary" onclick="setMode('company')">🏢 Company Research</button>
+            </div>
+            
+            <div id="opportunity-form" style="display: none; margin-top: 20px;">
+                <h3>Search for Automation Opportunities</h3>
+                <div class="input-group">
+                    <label>Keywords (job roles/skills to target)</label>
+                    <input type="text" id="keywords" placeholder="e.g., data entry, manual processing, coordinator" value="data entry automation">
+                </div>
+                <div class="input-group">
+                    <label>Location</label>
+                    <input type="text" id="location" placeholder="e.g., Remote, New York, San Francisco" value="Remote">
+                </div>
+                <button class="btn-primary" onclick="runOpportunitySearch()">Search Opportunities</button>
+            </div>
+            
+            <div id="company-form" style="display: none; margin-top: 20px;">
+                <h3>Deep Company Research</h3>
+                <div class="input-group">
+                    <label>Company Name</label>
+                    <input type="text" id="companyName" placeholder="e.g., TechCorp, Microsoft, Amazon">
+                </div>
+                <div class="input-group">
+                    <label>Company Website (optional)</label>
+                    <input type="text" id="companyUrl" placeholder="e.g., https://company.com">
+                </div>
+                <div class="input-group">
+                    <label>Research Notes (optional)</label>
+                    <textarea id="notes" placeholder="Any specific areas to focus on..."></textarea>
+                </div>
+                <button class="btn-primary" onclick="runCompanyResearch()">Analyze Company</button>
+                
+                <div class="example-companies">
+                    <div class="example-btn" onclick="loadExample('ecommerce')">
+                        <h5>E-Commerce Co</h5>
+                        <p>Growing online retailer</p>
+                    </div>
+                    <div class="example-btn" onclick="loadExample('logistics')">
+                        <h5>LogisticsCorp</h5>
+                        <p>Shipping & fulfillment</p>
+                    </div>
+                    <div class="example-btn" onclick="loadExample('healthcare')">
+                        <h5>HealthTech Inc</h5>
+                        <p>Medical records mgmt</p>
+                    </div>
+                    <div class="example-btn" onclick="loadExample('finance')">
+                        <h5>FinanceFlow</h5>
+                        <p>Invoice processing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="progress-container" id="progressContainer">
+            <h3>Analysis Progress</h3>
+            <div class="progress-step" id="step1">
+                <h4>📊 Data Collection</h4>
+                <p>Gathering information from multiple sources...</p>
+            </div>
+            <div class="progress-step" id="step2">
+                <h4>🏇 Brody Pass - Technical Analysis</h4>
+                <p>Analyzing job postings and technical indicators...</p>
+            </div>
+            <div class="progress-step" id="step3">
+                <h4>👩‍💼 Karen Pass - Business Analysis</h4>
+                <p>Understanding business model and growth patterns...</p>
+            </div>
+            <div class="progress-step" id="step4">
+                <h4>🛡️ Durin Pass - Infrastructure Analysis</h4>
+                <p>Examining technical stack and enterprise readiness...</p>
+            </div>
+            <div class="progress-step" id="step5">
+                <h4>🔍 Kevin Pass - Verification</h4>
+                <p>Cross-referencing and validating findings...</p>
+            </div>
+            <div class="progress-step" id="step6">
+                <h4>🎯 Pinko Pass - Synthesis</h4>
+                <p>Creating final recommendations and ROI estimates...</p>
+            </div>
+        </div>
+        
+        <div class="results-container" id="resultsContainer">
+            <h3>Analysis Results</h3>
+            <div id="resultsContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = null;
+        
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('opportunity-form').style.display = mode === 'opportunity' ? 'block' : 'none';
+            document.getElementById('company-form').style.display = mode === 'company' ? 'block' : 'none';
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('resultsContainer').style.display = 'none';
+        }
+        
+        function loadExample(type) {
+            const examples = {
+                ecommerce: {
+                    name: 'ShopifyStore Inc',
+                    url: 'https://shopifystore.example.com',
+                    notes: 'E-commerce company experiencing rapid growth, likely has manual order processing'
+                },
+                logistics: {
+                    name: 'FastShip Logistics',
+                    url: 'https://fastship.example.com',
+                    notes: 'Shipping company with manual tracking and coordination processes'
+                },
+                healthcare: {
+                    name: 'MedRecord Systems',
+                    url: 'https://medrecord.example.com',
+                    notes: 'Healthcare data management with HIPAA compliance needs'
+                },
+                finance: {
+                    name: 'InvoicePro Corp',
+                    url: 'https://invoicepro.example.com',
+                    notes: 'B2B invoice processing with high volume manual entry'
+                }
+            };
+            
+            const example = examples[type];
+            document.getElementById('companyName').value = example.name;
+            document.getElementById('companyUrl').value = example.url;
+            document.getElementById('notes').value = example.notes;
+        }
+        
+        async function runOpportunitySearch() {
+            const keywords = document.getElementById('keywords').value;
+            const location = document.getElementById('location').value;
+            
+            if (!keywords) {
+                alert('Please enter keywords to search');
+                return;
+            }
+            
+            showProgress();
+            simulateAnalysis('opportunity', { keywords, location });
+        }
+        
+        async function runCompanyResearch() {
+            const companyName = document.getElementById('companyName').value;
+            const companyUrl = document.getElementById('companyUrl').value;
+            const notes = document.getElementById('notes').value;
+            
+            if (!companyName) {
+                alert('Please enter a company name');
+                return;
+            }
+            
+            showProgress();
+            simulateAnalysis('company', { companyName, companyUrl, notes });
+        }
+        
+        function showProgress() {
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('resultsContainer').style.display = 'none';
+            
+            // Reset all steps
+            for (let i = 1; i <= 6; i++) {
+                const step = document.getElementById(`step${i}`);
+                step.classList.remove('active', 'complete');
+            }
+        }
+        
+        async function simulateAnalysis(type, data) {
+            const steps = ['step1', 'step2', 'step3', 'step4', 'step5', 'step6'];
+            
+            for (let i = 0; i < steps.length; i++) {
+                const step = document.getElementById(steps[i]);
+                step.classList.add('active');
+                
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                step.classList.remove('active');
+                step.classList.add('complete');
+            }
+            
+            showResults(type, data);
+        }
+        
+        function showResults(type, data) {
+            document.getElementById('resultsContainer').style.display = 'block';
+            const resultsContent = document.getElementById('resultsContent');
+            
+            if (type === 'opportunity') {
+                resultsContent.innerHTML = generateOpportunityResults(data);
+            } else {
+                resultsContent.innerHTML = generateCompanyResults(data);
+            }
+        }
+        
+        function generateOpportunityResults(data) {
+            return `
+                <div class="automation-score">
+                    <div class="score-label">Opportunities Found</div>
+                    <div class="score-number">12</div>
+                    <div class="score-label">High-value automation targets</div>
+                </div>
+                
+                <h4>Top Companies with Automation Potential</h4>
+                
+                <div class="finding-card high-impact">
+                    <div class="finding-header">
+                        <h5 class="finding-title">DataCorp Solutions - 5 Manual Process Indicators</h5>
+                        <span class="confidence-badge">95% confidence</span>
+                    </div>
+                    <p class="finding-detail">
+                        Currently hiring for 3 Data Entry Specialists and 2 Operations Coordinators. 
+                        Job descriptions mention "high-volume manual data processing" and "Excel-based tracking."
+                    </p>
+                    <div class="tags-container">
+                        <span class="tag">data-entry</span>
+                        <span class="tag">high-volume</span>
+                        <span class="tag">excel-heavy</span>
+                        <span class="tag">immediate-opportunity</span>
+                    </div>
+                </div>
+                
+                <div class="finding-card high-impact">
+                    <div class="finding-header">
+                        <h5 class="finding-title">ProcessFlow Inc - Scaling Challenges Detected</h5>
+                        <span class="confidence-badge">88% confidence</span>
+                    </div>
+                    <p class="finding-detail">
+                        15 open positions for process-related roles. Recent $10M funding round suggests 
+                        rapid growth. Multiple coordinator positions indicate workflow bottlenecks.
+                    </p>
+                    <div class="tags-container">
+                        <span class="tag">scaling</span>
+                        <span class="tag">workflow-automation</span>
+                        <span class="tag">funded</span>
+                    </div>
+                </div>
+                
+                <div class="finding-card medium-impact">
+                    <div class="finding-header">
+                        <h5 class="finding-title">TechOps Global - Legacy System Modernization</h5>
+                        <span class="confidence-badge">82% confidence</span>
+                    </div>
+                    <p class="finding-detail">
+                        Seeking "Excel experts" and "manual QA testers." Technology stack appears dated 
+                        based on job requirements. Good candidate for digital transformation.
+                    </p>
+                    <div class="tags-container">
+                        <span class="tag">legacy-systems</span>
+                        <span class="tag">modernization</span>
+                        <span class="tag">quality-automation</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function generateCompanyResults(data) {
+            const score = data.companyName.length % 3 + 7; // Simulated score
+            
+            return `
+                <div class="automation-score">
+                    <div class="score-label">Automation Potential Score</div>
+                    <div class="score-number">${score}/10</div>
+                    <div class="score-label">${getScoreLabel(score)}</div>
+                </div>
+                
+                <h4>Key Findings for ${data.companyName}</h4>
+                
+                <div class="finding-card high-impact">
+                    <div class="finding-header">
+                        <h5 class="finding-title">Manual Data Entry Bottleneck Detected</h5>
+                        <span class="confidence-badge">91% confidence</span>
+                    </div>
+                    <p class="finding-detail">
+                        Analysis reveals 8 current job postings for data entry and processing roles. 
+                        Estimated 40+ hours/week spent on manual data transfer between systems.
+                        <br><br>
+                        <strong>Automation Opportunity:</strong> Implement RPA for data entry tasks<br>
+                        <strong>Estimated Time Savings:</strong> 75% reduction in processing time<br>
+                        <strong>ROI Timeline:</strong> 3-4 months
+                    </p>
+                    <div class="tags-container">
+                        <span class="tag">quick-win</span>
+                        <span class="tag">rpa-candidate</span>
+                        <span class="tag">high-roi</span>
+                    </div>
+                </div>
+                
+                <div class="finding-card high-impact">
+                    <div class="finding-header">
+                        <h5 class="finding-title">Disconnected Systems Creating Inefficiencies</h5>
+                        <span class="confidence-badge">87% confidence</span>
+                    </div>
+                    <p class="finding-detail">
+                        Technology scan shows: WordPress website, Salesforce CRM, QuickBooks accounting, 
+                        and Excel for operations. No integration layer detected.
+                        <br><br>
+                        <strong>Automation Opportunity:</strong> API integration platform<br>
+                        <strong>Impact:</strong> Eliminate manual data sync between systems<br>
+                        <strong>Implementation:</strong> 2-3 months
+                    </p>
+                    <div class="tags-container">
+                        <span class="tag">integration</span>
+                        <span class="tag">api-automation</span>
+                        <span class="tag">strategic</span>
+                    </div>
+                </div>
+                
+                <div class="finding-card medium-impact">
+                    <div class="finding-header">
+                        <h5 class="finding-title">Customer Service Automation Potential</h5>
+                        <span class="confidence-badge">78% confidence</span>
+                    </div>
+                    <p class="finding-detail">
+                        5 customer service representative positions open. Job descriptions mention 
+                        "answering repetitive inquiries" and "order status updates."
+                        <br><br>
+                        <strong>Automation Opportunity:</strong> AI chatbot for tier-1 support<br>
+                        <strong>Expected Reduction:</strong> 60% of support tickets<br>
+                        <strong>Customer Satisfaction:</strong> Faster response times
+                    </p>
+                    <div class="tags-container">
+                        <span class="tag">customer-service</span>
+                        <span class="tag">ai-chatbot</span>
+                        <span class="tag">scalable</span>
+                    </div>
+                </div>
+                
+                <h4>Recommended Implementation Roadmap</h4>
+                <div class="finding-card low-impact">
+                    <div class="finding-header">
+                        <h5 class="finding-title">Phase 1: Quick Wins (Month 1-2)</h5>
+                    </div>
+                    <p class="finding-detail">
+                        • Implement RPA for data entry tasks<br>
+                        • Set up basic workflow automation<br>
+                        • Expected ROI: 200% in 6 months
+                    </p>
+                </div>
+                
+                <div class="finding-card low-impact">
+                    <div class="finding-header">
+                        <h5 class="finding-title">Phase 2: System Integration (Month 3-4)</h5>
+                    </div>
+                    <p class="finding-detail">
+                        • Deploy API integration platform<br>
+                        • Connect CRM, accounting, and operations<br>
+                        • Expected efficiency gain: 40%
+                    </p>
+                </div>
+                
+                <div class="finding-card low-impact">
+                    <div class="finding-header">
+                        <h5 class="finding-title">Phase 3: AI Enhancement (Month 5-6)</h5>
+                    </div>
+                    <p class="finding-detail">
+                        • Launch customer service chatbot<br>
+                        • Implement predictive analytics<br>
+                        • Expected cost reduction: 35%
+                    </p>
+                </div>
+            `;
+        }
+        
+        function getScoreLabel(score) {
+            if (score >= 8) return "Exceptional automation opportunity";
+            if (score >= 6) return "Strong automation potential";
+            if (score >= 4) return "Moderate automation potential";
+            return "Limited automation potential";
+        }
+    </script>
+</body>
+</html>

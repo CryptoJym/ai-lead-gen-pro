@@ -1,0 +1,49 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "regions": ["iad1"],
+  "functions": {
+    "src/app/api/research/route.ts": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "REDIS_URL": "@redis-url",
+    "SUPABASE_URL": "@supabase-url",
+    "SUPABASE_SERVICE_KEY": "@supabase-service-key",
+    "SUPABASE_ANON_KEY": "@supabase-anon-key",
+    "OPENAI_API_KEY": "@openai-api-key",
+    "ANTHROPIC_API_KEY": "@anthropic-api-key",
+    "DAILY_RESEARCH_CAP_PER_TENANT": "50",
+    "MAX_CONCURRENT_RESEARCH_JOBS": "3",
+    "ENABLE_CACHE": "true",
+    "ENABLE_LLM_SYNTHESIS": "true"
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "X-Requested-With, Content-Type, Authorization, X-Client-ID"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/docs",
+      "destination": "/api-docs.html"
+    }
+  ]
+}

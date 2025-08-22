@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Lead Gen Pro - System Architecture & Flow</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        .diagram-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .explanation {
+            background: #f0f7ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border-left: 4px solid #0066cc;
+        }
+        .horsemen-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+        }
+        .horsemen-card h4 {
+            margin-top: 0;
+            color: #0066cc;
+        }
+        .tag {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin: 2px;
+        }
+        .confidence-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .confidence-fill {
+            height: 100%;
+            background: #4caf50;
+            transition: width 0.3s ease;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .feature-box {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .feature-box h4 {
+            margin-top: 0;
+            color: #ff6b6b;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .mermaid {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 AI Lead Gen Pro - System Architecture & Flow</h1>
+        
+        <div class="diagram-container">
+            <h2>1. System Overview</h2>
+            <div class="mermaid">
+                graph TB
+                    subgraph "Input Layer"
+                        A[User Request] --> B{Request Type}
+                        B -->|Keywords + Location| C[Opportunity Search]
+                        B -->|Company Name/URL| D[Deep Research]
+                    end
+                    
+                    subgraph "Data Collection Layer"
+                        C --> E[Job Board Scraping]
+                        D --> F[OSINT Collection]
+                        
+                        E --> G[Indeed]
+                        E --> H[LinkedIn]
+                        E --> I[Glassdoor]
+                        E --> J[ZipRecruiter]
+                        E --> K[SimplyHired]
+                        
+                        F --> L[Corporate Data]
+                        F --> M[News Articles]
+                        F --> N[Tech Stack]
+                        F --> O[Social Media]
+                        F --> P[Procurement]
+                        F --> Q[Web Archives]
+                    end
+                    
+                    subgraph "Analysis Layer - Horsemen Pattern"
+                        G & H & I & J & K --> R[Aggregated Jobs]
+                        L & M & N & O & P & Q --> S[OSINT Context]
+                        
+                        R --> T[Company Grouping]
+                        T --> S
+                        
+                        S --> U[🏇 Brody Pass]
+                        S --> V[👩‍💼 Karen Pass]
+                        S --> W[🛡️ Durin Pass]
+                        
+                        U & V & W --> X[🔍 Kevin Pass]
+                        X --> Y[🎯 Pinko Pass]
+                    end
+                    
+                    subgraph "Intelligence Layer"
+                        U -.->|If LLM Available| Z[LLM Analysis]
+                        V -.->|If LLM Available| Z
+                        W -.->|If LLM Available| Z
+                        Z -.-> U1[Enhanced Findings]
+                        
+                        U -->|Fallback| U2[Pattern Matching]
+                        V -->|Fallback| V2[Pattern Matching]
+                        W -->|Fallback| W2[Pattern Matching]
+                    end
+                    
+                    subgraph "Output Layer"
+                        Y --> AA[Prioritized Findings]
+                        AA --> AB[Automation Score]
+                        AA --> AC[Recommendations]
+                        AA --> AD[ROI Estimates]
+                        
+                        AB & AC & AD --> AE[Final Report]
+                    end
+                    
+                    style A fill:#e3f2fd
+                    style AE fill:#c8e6c9
+                    style Z fill:#fff3cd
+                    style U fill:#ff9800
+                    style V fill:#e91e63
+                    style W fill:#9c27b0
+                    style X fill:#3f51b5
+                    style Y fill:#009688
+            </div>
+            <div class="explanation">
+                <strong>Key Flow:</strong> The system operates in distinct layers, each with specific responsibilities:
+                <ul>
+                    <li><strong>Input Layer:</strong> Determines whether to search for opportunities broadly or research a specific company</li>
+                    <li><strong>Data Collection:</strong> Gathers real-time data from multiple sources using web scraping and APIs</li>
+                    <li><strong>Analysis Layer:</strong> Applies the 5-pass Horsemen pattern for comprehensive analysis</li>
+                    <li><strong>Intelligence Layer:</strong> Enhances analysis with LLM when available, falls back to pattern matching</li>
+                    <li><strong>Output Layer:</strong> Synthesizes findings into actionable recommendations</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="diagram-container">
+            <h2>2. The Horsemen Analysis Pattern - Deep Dive</h2>
+            
+            <div class="horsemen-card">
+                <h4>🏇 Brody Pass - Technical Analysis & Job Patterns</h4>
+                <p><strong>Purpose:</strong> Identifies technical gaps and manual processes through job posting analysis</p>
+                <div class="feature-grid">
+                    <div class="feature-box">
+                        <h5>What it analyzes:</h5>
+                        <ul>
+                            <li>Job titles indicating manual work</li>
+                            <li>Technology stack gaps</li>
+                            <li>Repetitive task descriptions</li>
+                            <li>Data entry positions</li>
+                        </ul>
+                    </div>
+                    <div class="feature-box">
+                        <h5>Key indicators:</h5>
+                        <div class="tag">data-entry</div>
+                        <div class="tag">manual-process</div>
+                        <div class="tag">coordinator</div>
+                        <div class="tag">specialist</div>
+                        <div class="tag">analyst</div>
+                    </div>
+                    <div class="feature-box">
+                        <h5>Example finding:</h5>
+                        <pre>{
+  "title": "High Manual Data Entry Volume",
+  "detail": "5+ job postings for data entry roles",
+  "confidence": 0.85,
+  "impact": "high"
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="horsemen-card">
+                <h4>👩‍💼 Karen Pass - Business Model & Market Analysis</h4>
+                <p><strong>Purpose:</strong> Understands business context, growth trajectory, and market pressures</p>
+                <div class="feature-grid">
+                    <div class="feature-box">
+                        <h5>What it analyzes:</h5>
+                        <ul>
+                            <li>Recent funding/growth news</li>
+                            <li>Business model type</li>
+                            <li>Market expansion signals</li>
+                            <li>Competitive pressures</li>
+                        </ul>
+                    </div>
+                    <div class="feature-box">
+                        <h5>Key indicators:</h5>
+                        <div class="tag">series-funding</div>
+                        <div class="tag">expansion</div>
+                        <div class="tag">scaling</div>
+                        <div class="tag">b2b</div>
+                        <div class="tag">marketplace</div>
+                    </div>
+                    <div class="feature-box">
+                        <h5>Example finding:</h5>
+                        <pre>{
+  "title": "Rapid Growth Scaling Challenge",
+  "detail": "Series B funding + 30% headcount growth",
+  "confidence": 0.9,
+  "impact": "critical"
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="horsemen-card">
+                <h4>🛡️ Durin Pass - Deep Infrastructure & Process Analysis</h4>
+                <p><strong>Purpose:</strong> Examines technical infrastructure, compliance needs, and enterprise readiness</p>
+                <div class="feature-grid">
+                    <div class="feature-box">
+                        <h5>What it analyzes:</h5>
+                        <ul>
+                            <li>Current tech stack maturity</li>
+                            <li>Government contracts</li>
+                            <li>Security/compliance needs</li>
+                            <li>Integration opportunities</li>
+                        </ul>
+                    </div>
+                    <div class="feature-box">
+                        <h5>Key indicators:</h5>
+                        <div class="tag">legacy-system</div>
+                        <div class="tag">procurement</div>
+                        <div class="tag">enterprise</div>
+                        <div class="tag">compliance</div>
+                        <div class="tag">integration</div>
+                    </div>
+                    <div class="feature-box">
+                        <h5>Example finding:</h5>
+                        <pre>{
+  "title": "Government Contractor Status",
+  "detail": "$2M in federal contracts",
+  "confidence": 0.95,
+  "impact": "high-value"
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="horsemen-card">
+                <h4>🔍 Kevin Pass - Verification & Cross-Reference</h4>
+                <p><strong>Purpose:</strong> Validates findings, removes duplicates, and ensures accuracy</p>
+                <div class="feature-grid">
+                    <div class="feature-box">
+                        <h5>Verification criteria:</h5>
+                        <ul>
+                            <li>Multiple source corroboration</li>
+                            <li>Confidence thresholds</li>
+                            <li>Contradiction detection</li>
+                            <li>Deduplication</li>
+                        </ul>
+                    </div>
+                    <div class="feature-box">
+                        <h5>Actions taken:</h5>
+                        <ul>
+                            <li>Boost confidence for multi-source findings</li>
+                            <li>Remove low-confidence uncorroborated claims</li>
+                            <li>Merge similar findings</li>
+                            <li>Flag contradictions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="horsemen-card">
+                <h4>🎯 Pinko Pass - Final Synthesis & Prioritization</h4>
+                <p><strong>Purpose:</strong> Creates executive summary, prioritizes opportunities, and estimates ROI</p>
+                <div class="feature-grid">
+                    <div class="feature-box">
+                        <h5>Synthesis includes:</h5>
+                        <ul>
+                            <li>Automation score (1-10)</li>
+                            <li>Top 3 quick wins</li>
+                            <li>Strategic initiatives</li>
+                            <li>Implementation roadmap</li>
+                        </ul>
+                    </div>
+                    <div class="feature-box">
+                        <h5>Prioritization factors:</h5>
+                        <ul>
+                            <li>Impact potential</li>
+                            <li>Implementation difficulty</li>
+                            <li>Time to value</li>
+                            <li>Cost savings</li>
+                        </ul>
+                    </div>
+                    <div class="feature-box">
+                        <h5>Example output:</h5>
+                        <pre>{
+  "automationScore": 8.5,
+  "quickWins": ["RPA for data entry"],
+  "timeline": "3-6 months",
+  "estimatedROI": "300%"
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="diagram-container">
+            <h2>3. Decision Flow - Why the System Makes Its Determinations</h2>
+            <div class="mermaid">
+                flowchart TD
+                    Start([Company Data Input]) --> A{Has Job Postings?}
+                    
+                    A -->|Yes| B[Analyze Job Titles]
+                    A -->|No| C[Skip Job Analysis]
+                    
+                    B --> D{Manual Keywords Found?}
+                    D -->|Yes| E[Flag: High Automation Potential]
+                    D -->|No| F[Check Other Signals]
+                    
+                    C --> G[Analyze Tech Stack]
+                    F --> G
+                    E --> G
+                    
+                    G --> H{Legacy Systems?}
+                    H -->|Yes| I[Flag: Modernization Opportunity]
+                    H -->|No| J[Check Growth Signals]
+                    
+                    I --> K[Check News/Funding]
+                    J --> K
+                    
+                    K --> L{Recent Growth?}
+                    L -->|Yes| M[Flag: Scaling Challenges]
+                    L -->|No| N[Check Procurement]
+                    
+                    M --> O[Calculate Score]
+                    N --> O
+                    
+                    O --> P{Score > 7?}
+                    P -->|Yes| Q[High Priority Lead]
+                    P -->|No| R{Score > 4?}
+                    R -->|Yes| S[Medium Priority Lead]
+                    R -->|No| T[Low Priority Lead]
+                    
+                    Q --> End([Generate Report])
+                    S --> End
+                    T --> End
+                    
+                    style E fill:#ff9800
+                    style I fill:#e91e63
+                    style M fill:#9c27b0
+                    style Q fill:#4caf50
+                    style S fill:#ffc107
+                    style T fill:#f44336
+            </div>
+            <div class="explanation">
+                <strong>Decision Logic:</strong> The system uses a multi-factor scoring approach:
+                <ul>
+                    <li><strong>Manual Process Indicators:</strong> +3 points for each manual/repetitive job role</li>
+                    <li><strong>Legacy Technology:</strong> +2 points for outdated systems</li>
+                    <li><strong>Growth/Scaling:</strong> +2 points for rapid growth indicators</li>
+                    <li><strong>Enterprise/Compliance:</strong> +1 point for complex requirements</li>
+                    <li><strong>Integration Needs:</strong> +1 point for disconnected systems</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="diagram-container">
+            <h2>4. LLM Integration Flow</h2>
+            <div class="mermaid">
+                graph LR
+                    A[Context Data] --> B{LLM Available?}
+                    
+                    B -->|Yes| C[Generate Prompt]
+                    C --> D[Send to LLM]
+                    D --> E{Response Valid?}
+                    
+                    E -->|Yes| F[Extract Findings]
+                    E -->|No| G[Log Error]
+                    
+                    B -->|No| H[Pattern Matching]
+                    G --> H
+                    
+                    F --> I[Enhanced Analysis]
+                    H --> J[Basic Analysis]
+                    
+                    I --> K[Final Findings]
+                    J --> K
+                    
+                    style C fill:#fff3cd
+                    style D fill:#fff3cd
+                    style F fill:#c8e6c9
+                    style H fill:#ffccbc
+            </div>
+            <div class="explanation">
+                <strong>LLM Enhancement:</strong> When available, the LLM provides:
+                <ul>
+                    <li>Contextual understanding beyond keyword matching</li>
+                    <li>Industry-specific insights</li>
+                    <li>Nuanced opportunity identification</li>
+                    <li>Better ROI estimation</li>
+                </ul>
+                <strong>Fallback:</strong> Pattern matching ensures the system works without LLM access
+            </div>
+        </div>
+
+        <div class="diagram-container">
+            <h2>5. Automation Opportunity Scoring Matrix</h2>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f0f0f0;">
+                        <th style="padding: 10px; border: 1px solid #ddd;">Indicator</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">Weight</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">Example</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">Why It Matters</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Manual Data Entry Jobs</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">3x</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">5+ data entry positions</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Direct automation opportunity with RPA</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Process Coordinator Roles</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">2.5x</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Operations coordinators</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Workflow automation potential</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Legacy Technology</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">2x</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Using Excel for everything</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Modernization opportunity</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Recent Funding</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">2x</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Series A/B/C rounds</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Budget available for solutions</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Rapid Hiring</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">1.5x</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">20+ open positions</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Scaling challenges</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Government Contracts</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">1.5x</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Federal procurement</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Compliance automation needs</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

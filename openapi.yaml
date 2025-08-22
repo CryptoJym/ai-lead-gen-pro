@@ -1,0 +1,357 @@
+openapi: 3.0.3
+info:
+  title: AI Lead Generation API
+  description: |
+    AI-powered lead generation system that identifies companies with high automation potential
+    by analyzing job postings and company signals.
+    
+    ## Features
+    - Job board analysis across 12+ sources
+    - 5-pass "Horsemen" AI analysis pattern
+    - OSINT data collection
+    - Automation opportunity scoring
+    - Multi-tenant support with rate limiting
+  version: 2.0.0
+  contact:
+    name: API Support
+    email: support@ai-lead-gen.com
+servers:
+  - url: https://api.ai-lead-gen.com
+    description: Production server
+  - url: http://localhost:3000
+    description: Development server
+tags:
+  - name: Research
+    description: Lead generation and company research endpoints
+  - name: Status
+    description: API status and rate limit information
+paths:
+  /api/research:
+    post:
+      tags:
+        - Research
+      summary: Run AI-powered lead generation research
+      description: |
+        Analyze companies for automation opportunities using either:
+        1. **Keyword Search** - Find companies posting relevant jobs
+        2. **Direct Research** - Deep dive on a specific company
+      operationId: runResearch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResearchRequest'
+            examples:
+              keywordSearch:
+                summary: Search by job keywords
+                value:
+                  keywords: "data entry manual process"
+                  location: "New York"
+                  notes: "Focus on finance sector"
+                  clientId: "550e8400-e29b-41d4-a716-446655440000"
+              companyResearch:
+                summary: Research specific company
+                value:
+                  companyName: "Acme Corp"
+                  companyUrl: "https://acmecorp.com"
+                  notes: "Interested in their operations"
+                  clientId: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        '200':
+          description: Research completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/ResearchResult'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/AuthenticationError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    get:
+      tags:
+        - Research
+      summary: Get API information
+      description: Returns basic API information and available endpoints
+      operationId: getApiInfo
+      responses:
+        '200':
+          description: API information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiInfo'
+  /api/status:
+    get:
+      tags:
+        - Status
+      summary: Get rate limit status
+      description: Check current rate limit usage and remaining quota
+      operationId: getRateLimitStatus
+      parameters:
+        - in: header
+          name: X-Client-ID
+          schema:
+            type: string
+            format: uuid
+          description: Client ID to check rate limits for
+      responses:
+        '200':
+          description: Rate limit status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitStatus'
+components:
+  schemas:
+    ResearchRequest:
+      type: object
+      properties:
+        keywords:
+          type: string
+          description: Search keywords for job postings (Option 1)
+          example: "data entry repetitive tasks"
+        location:
+          type: string
+          description: Location filter for job search
+          example: "San Francisco, CA"
+        companyName:
+          type: string
+          description: Company name for direct research (Option 2)
+          example: "Acme Corporation"
+        companyUrl:
+          type: string
+          format: uri
+          description: Company website URL
+          example: "https://acmecorp.com"
+        notes:
+          type: string
+          description: Additional context or requirements
+          example: "Focus on operations roles"
+        clientId:
+          type: string
+          format: uuid
+          description: Client/tenant identifier
+        userId:
+          type: string
+          format: uuid
+          description: User identifier
+    ResearchResult:
+      type: object
+      required:
+        - jobId
+        - model
+        - summary
+        - findings
+      properties:
+        jobId:
+          type: string
+          description: Unique job identifier
+        model:
+          type: string
+          enum: [horsemen, opportunity-search]
+          description: Analysis model used
+        summary:
+          type: string
+          description: Executive summary of findings
+        findings:
+          oneOf:
+            - type: array
+              items:
+                $ref: '#/components/schemas/Finding'
+            - type: array
+              items:
+                $ref: '#/components/schemas/CompanyFindings'
+        meta:
+          type: object
+          properties:
+            keywords:
+              type: string
+            location:
+              type: string
+            notes:
+              type: string
+    Finding:
+      type: object
+      required:
+        - title
+        - detail
+        - confidence
+        - tags
+        - sources
+      properties:
+        title:
+          type: string
+          example: "High-Volume Operations Role Identified"
+        detail:
+          type: string
+          example: "Data Entry Specialist indicates high-volume manual data entry tasks. Prime candidate for automation."
+        confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          example: 0.85
+        tags:
+          type: array
+          items:
+            type: string
+          example: ["automation-opportunity", "high-impact", "job-posting"]
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/Source'
+    CompanyFindings:
+      type: object
+      required:
+        - company
+        - jobs
+        - research
+      properties:
+        company:
+          type: string
+          example: "Acme Corp"
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobPosting'
+        research:
+          type: array
+          items:
+            $ref: '#/components/schemas/Finding'
+    JobPosting:
+      type: object
+      required:
+        - title
+        - company
+      properties:
+        title:
+          type: string
+          example: "Data Entry Specialist"
+        company:
+          type: string
+          example: "Acme Corp"
+        url:
+          type: string
+          format: uri
+        location:
+          type: string
+          example: "New York, NY"
+        date:
+          type: string
+          format: date-time
+        source:
+          type: string
+          example: "indeed"
+    Source:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+          format: uri
+        date:
+          type: string
+          format: date
+    RateLimitStatus:
+      type: object
+      properties:
+        dailyUsed:
+          type: integer
+          example: 25
+        dailyLimit:
+          type: integer
+          example: 50
+        dailyRemaining:
+          type: integer
+          example: 25
+        concurrentUsed:
+          type: integer
+          example: 1
+        concurrentLimit:
+          type: integer
+          example: 3
+        resetAt:
+          type: string
+          format: date-time
+    ApiInfo:
+      type: object
+      properties:
+        message:
+          type: string
+        version:
+          type: string
+        endpoints:
+          type: object
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+          properties:
+            message:
+              type: string
+            code:
+              type: string
+            details:
+              type: object
+  responses:
+    ValidationError:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              message: "Invalid request parameters"
+              code: "VALIDATION_ERROR"
+              details:
+                keywords: ["Required"]
+    AuthenticationError:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              message: "Authentication required"
+              code: "AUTHENTICATION_ERROR"
+    RateLimitError:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              message: "Daily research limit exceeded. Please try again tomorrow."
+              code: "RATE_LIMIT_EXCEEDED"
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              message: "Internal server error"
+              code: "INTERNAL_ERROR"
