@@ -14,6 +14,7 @@ export interface JobPosting {
   location?: string;
   date?: string;
   source?: string;
+  text?: string;
 }
 
 export interface ResearchRequest {
@@ -47,6 +48,10 @@ export interface Finding {
   confidence: number;
   tags: string[];
   sources: Source[];
+  metadata?: {
+    automationScore?: number;
+    [key: string]: any;
+  };
 }
 
 export interface Source {
@@ -74,15 +79,18 @@ export interface CompanyFindings {
 }
 
 export interface CorporateData {
-  name: string;
+  name?: string;
+  domain?: string;
   description?: string;
-  industry?: string;
-  founded?: string;
+  industry?: string | null;
+  founded?: string | null;
   headquarters?: string;
-  employeeCount?: string;
-  revenue?: string;
+  location?: string | null;
+  employees?: string | null;
+  employeeCount?: string | null;
+  revenue?: string | null;
   website?: string;
-  [key: string]: string | undefined;
+  [key: string]: string | null | undefined;
 }
 
 export interface OsintContext {
@@ -103,6 +111,9 @@ export interface NewsItem {
   title: string;
   url?: string;
   date?: string;
+  source?: string;
+  summary?: string | null;
+  sentiment?: string | null;
 }
 
 export interface JobItem {
@@ -115,6 +126,8 @@ export interface TechSignal {
   name?: string;
   product?: string;
   slug?: string;
+  category?: string;
+  description?: string;
 }
 
 export interface SocialSignal {

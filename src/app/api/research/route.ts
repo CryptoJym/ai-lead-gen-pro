@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { searchOpportunities, runDeepResearch } from '@/services/research/engine';
 import { errorHandler, ValidationError, RateLimitError } from '@/lib/errors';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { authenticateRequest } from '@/lib/middleware/auth';
 import { ResearchRequest } from '@/types';
 
 // Request validation schema
@@ -11,9 +12,7 @@ const ResearchRequestSchema = z.object({
   location: z.string().optional(),
   companyName: z.string().optional(),
   companyUrl: z.string().url().optional(),
-  notes: z.string().optional(),
-  clientId: z.string().uuid().optional(),
-  userId: z.string().uuid().optional()
+  notes: z.string().optional()
 }).refine(
   data => (data.keywords && !data.companyName) || (!data.keywords && (data.companyName || data.companyUrl)),
   {
@@ -23,21 +22,27 @@ const ResearchRequestSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // Authenticate request
+    const authContext = await authenticateRequest(request);
+
     // Parse and validate request body
     const body = await request.json();
     const validation = ResearchRequestSchema.safeParse(body);
-    
+
     if (!validation.success) {
       throw new ValidationError(
         'Invalid request parameters',
         validation.error.flatten()
       );
     }
-    
+
     const data = validation.data as ResearchRequest;
-    
+
+    // Use authenticated client ID
+    const clientId = authContext.clientId;
+    const userId = authContext.userId;
+
     // Check rate limits
-    const clientId = data.clientId || 'anonymous';
     const rateLimitOk = await checkRateLimit(clientId);
     
     if (!rateLimitOk) {
@@ -49,12 +54,18 @@ export async function POST(request: NextRequest) {
     
     // Execute research based on request type
     let result;
+    const requestWithAuth = {
+      ...data,
+      clientId,
+      userId
+    };
+
     if (data.keywords && !data.companyName && !data.companyUrl) {
       // Opportunity search mode
-      result = await searchOpportunities(data);
+      result = await searchOpportunities(requestWithAuth);
     } else {
       // Deep research mode
-      result = await runDeepResearch(data);
+      result = await runDeepResearch(requestWithAuth);
     }
     
     // Return success response

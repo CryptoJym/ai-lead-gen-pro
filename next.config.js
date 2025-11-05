@@ -2,7 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  
+
+  // Enable standalone output for Docker deployment
+  output: 'standalone',
+
   // Optimize for Vercel deployment
   images: {
     domains: ['vercel.app', 'githubusercontent.com'],

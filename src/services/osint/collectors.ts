@@ -149,10 +149,10 @@ async function scrapeGoogleNews(companyName: string): Promise<OsintContext['news
       const article = articles[i];
       
       const newsItem = {
-        title: await article.$eval('h3', el => el.textContent?.trim() || '') || '',
-        url: await article.$eval('a', el => el.getAttribute('href') || '') || '',
-        date: await article.$eval('time', el => el.getAttribute('datetime') || '') || new Date().toISOString(),
-        source: await article.$eval('[data-n-tid]', el => el.textContent?.trim() || '') || '',
+        title: await article.$eval('h3', (el: Element) => el.textContent?.trim() || '') || '',
+        url: await article.$eval('a', (el: Element) => el.getAttribute('href') || '') || '',
+        date: await article.$eval('time', (el: Element) => el.getAttribute('datetime') || '') || new Date().toISOString(),
+        source: await article.$eval('[data-n-tid]', (el: Element) => el.textContent?.trim() || '') || '',
         summary: null,
         sentiment: null
       };
@@ -223,8 +223,8 @@ async function detectTechFromWebsite(company: Company): Promise<OsintContext['te
     
     // Intercept responses to detect technologies
     const detectedTech = new Set<string>();
-    
-    page.on('response', response => {
+
+    page.on('response', (response: any) => {
       const url = response.url();
       const headers = response.headers();
       

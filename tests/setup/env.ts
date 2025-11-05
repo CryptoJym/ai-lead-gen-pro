@@ -1,5 +1,5 @@
 // Test environment setup
-process.env.NODE_ENV = 'test';
+// NODE_ENV is automatically set to 'test' by Jest
 process.env.SUPABASE_URL = 'https://test.supabase.co';
 process.env.SUPABASE_SERVICE_KEY = 'test-service-key';
 process.env.SUPABASE_ANON_KEY = 'test-anon-key';
