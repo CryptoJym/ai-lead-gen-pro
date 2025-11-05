@@ -1,0 +1,140 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ai-leadgen-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: leadgen
+      POSTGRES_PASSWORD: leadgen_dev_password
+      POSTGRES_DB: ai_lead_gen_pro
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U leadgen"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - leadgen-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: ai-leadgen-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - leadgen-network
+
+  # AI Lead Gen Pro Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    container_name: ai-leadgen-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      # Database
+      DATABASE_URL: postgresql://leadgen:leadgen_dev_password@postgres:5432/ai_lead_gen_pro
+
+      # Redis
+      REDIS_URL: redis://redis:6379
+
+      # Application
+      NODE_ENV: development
+      PORT: 3000
+
+      # Authentication
+      DEFAULT_CLIENT_ID: dev-client-123
+      API_KEY: dev-api-key-12345
+      JWT_SECRET: dev-jwt-secret-change-in-production
+      ALLOW_ANONYMOUS: "true"
+
+      # CORS
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:3001
+
+      # Rate Limiting
+      DAILY_RESEARCH_CAP_PER_TENANT: 50
+      MAX_CONCURRENT_RESEARCH_JOBS: 3
+
+      # Features
+      ENABLE_CACHE: "true"
+      ENABLE_LLM_SYNTHESIS: "false"
+      ENABLE_MOCK_MODE: "false"
+      USE_REAL_SCRAPING: "false"
+    volumes:
+      # Mount source for development hot-reload (optional)
+      # - ./src:/app/src
+      # - ./public:/app/public
+
+      # Mount for logs
+      - ./logs:/app/logs
+    networks:
+      - leadgen-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/status', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      start_period: 40s
+      retries: 3
+
+  # Optional: Adminer for database management
+  adminer:
+    image: adminer:latest
+    container_name: ai-leadgen-adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: pepa-linha
+    networks:
+      - leadgen-network
+    profiles:
+      - tools
+
+  # Optional: Redis Commander for Redis management
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: ai-leadgen-redis-commander
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    networks:
+      - leadgen-network
+    profiles:
+      - tools
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  leadgen-network:
+    driver: bridge

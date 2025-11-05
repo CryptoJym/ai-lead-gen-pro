@@ -1,0 +1,198 @@
+// Prisma Schema for AI Lead Gen Pro
+// Database: PostgreSQL
+// Version: 2.0.0
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model for authentication and authorization
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String?  // Optional for OAuth users
+  role      Role     @default(USER)
+  clientId  String?  @map("client_id")
+  client    Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  opportunities Opportunity[]
+
+  @@index([email])
+  @@index([clientId])
+  @@map("users")
+}
+
+// Client/Tenant model for multi-tenancy
+model Client {
+  id          String   @id @default(uuid())
+  name        String
+  domain      String?  @unique
+  apiKey      String?  @unique @map("api_key")
+
+  // Rate limiting configuration
+  dailyCap    Int      @default(50) @map("daily_cap")
+  concurrentLimit Int  @default(3) @map("concurrent_limit")
+
+  // Status
+  isActive    Boolean  @default(true) @map("is_active")
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  users         User[]
+  researchJobs  ResearchJob[]
+  opportunities Opportunity[]
+
+  @@index([apiKey])
+  @@map("clients")
+}
+
+// Research job tracking
+model ResearchJob {
+  id          String      @id @default(uuid())
+  clientId    String      @map("client_id")
+  client      Client      @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  extJobId    String?     @map("ext_job_id")
+
+  // Request payload
+  keywords    String?
+  location    String?
+  companyName String?     @map("company_name")
+  companyUrl  String?     @map("company_url")
+  notes       String?
+  userId      String?     @map("user_id")
+
+  // Job status
+  status      JobStatus   @default(RUNNING)
+  model       ResearchModel @default(HORSEMEN)
+
+  // Results (stored as JSON)
+  result      Json?
+  error       String?
+
+  // Timing
+  startedAt   DateTime    @default(now()) @map("started_at")
+  completedAt DateTime?   @map("completed_at")
+  duration    Int?        // Duration in seconds
+
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  @@index([clientId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("research_jobs")
+}
+
+// Opportunity model for tracking leads
+model Opportunity {
+  id          String          @id @default(uuid())
+  clientId    String          @map("client_id")
+  client      Client          @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  title       String
+  companyName String          @map("company_name")
+  url         String
+  source      String?
+  regionCode  String?         @map("region_code")
+  keywords    String[]        // Array of keywords
+
+  // Status tracking
+  status      OpportunityStatus @default(UNCLAIMED)
+  claimedBy   String?         @map("claimed_by")
+  claimedById String?         @map("claimed_by_id")
+  claimedByUser User?         @relation(fields: [claimedById], references: [id], onDelete: SetNull)
+  claimedAt   DateTime?       @map("claimed_at")
+
+  // Value estimation
+  estMvpValue Float?          @map("est_mvp_value")
+
+  // Research findings (stored as JSON)
+  findings    Json?
+
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  @@index([clientId])
+  @@index([status])
+  @@index([companyName])
+  @@index([createdAt])
+  @@map("opportunities")
+}
+
+// Company cache for OSINT data
+model Company {
+  id          String   @id @default(uuid())
+  name        String
+  domain      String   @unique
+  homepageUrl String?  @map("homepage_url")
+
+  // OSINT data (stored as JSON)
+  osintData   Json?    @map("osint_data")
+
+  // Cache metadata
+  lastScraped DateTime? @map("last_scraped")
+  cacheExpiry DateTime? @map("cache_expiry")
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([domain])
+  @@index([lastScraped])
+  @@map("companies")
+}
+
+// API usage tracking for analytics
+model ApiUsage {
+  id          String   @id @default(uuid())
+  clientId    String   @map("client_id")
+
+  endpoint    String
+  method      String
+  statusCode  Int      @map("status_code")
+  duration    Int      // Duration in milliseconds
+
+  // Request metadata
+  userAgent   String?  @map("user_agent")
+  ipAddress   String?  @map("ip_address")
+
+  timestamp   DateTime @default(now())
+
+  @@index([clientId])
+  @@index([timestamp])
+  @@index([endpoint])
+  @@map("api_usage")
+}
+
+// Enums
+enum Role {
+  ADMIN
+  USER
+}
+
+enum JobStatus {
+  RUNNING
+  DONE
+  ERROR
+}
+
+enum ResearchModel {
+  HORSEMEN
+  OPPORTUNITY_SEARCH
+}
+
+enum OpportunityStatus {
+  UNCLAIMED
+  CLAIMED
+  WON
+  LOST
+}

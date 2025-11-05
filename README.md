@@ -19,6 +19,8 @@ AI Lead Gen Pro is a complete rewrite of the original Lead-Gen-Program, rebuilt 
 
 ## 📋 Quick Start
 
+### Option 1: Local Development
+
 ```bash
 # Clone the repository
 git clone https://github.com/cryptojym/ai-lead-gen-pro.git
@@ -31,12 +33,33 @@ npm install
 cp .env.example .env
 # Edit .env with your credentials
 
+# Run database migrations (if using PostgreSQL)
+npm run db:migrate
+
 # Run development server
 npm run dev
 
 # Run tests
 npm test
 ```
+
+### Option 2: Docker (Recommended)
+
+```bash
+# Clone the repository
+git clone https://github.com/cryptojym/ai-lead-gen-pro.git
+cd ai-lead-gen-pro
+
+# Start all services (PostgreSQL, Redis, App)
+docker-compose up -d
+
+# View logs
+docker-compose logs -f app
+
+# Access the application at http://localhost:3000
+```
+
+See [DOCKER.md](./DOCKER.md) for detailed Docker deployment guide.
 
 ## 🏗️ Architecture
 
@@ -74,18 +97,48 @@ src/
 
 ## 🔧 API Usage
 
+### Authentication
+
+AI Lead Gen Pro supports multiple authentication methods:
+
+**1. API Key (Recommended for Production)**
+```bash
+curl -X POST https://your-domain.com/api/research \
+  -H "X-API-Key: your-api-key-here" \
+  -H "Content-Type: application/json" \
+  -d '{"keywords": "automation"}'
+```
+
+**2. Bearer Token (JWT)**
+```bash
+curl -X POST https://your-domain.com/api/research \
+  -H "Authorization: Bearer your-jwt-token" \
+  -H "Content-Type: application/json" \
+  -d '{"keywords": "automation"}'
+```
+
+**3. Client ID (Development Only)**
+```bash
+curl -X POST http://localhost:3000/api/research \
+  -H "X-Client-ID: your-client-uuid" \
+  -H "Content-Type: application/json" \
+  -d '{"keywords": "automation"}'
+```
+
+See [SECURITY.md](./SECURITY.md) for detailed security configuration.
+
 ### 1. Search by Keywords (Find Opportunities)
 
 Find companies posting jobs with high automation potential:
 
 ```bash
 curl -X POST http://localhost:3000/api/research \
+  -H "X-API-Key: your-api-key" \
   -H "Content-Type: application/json" \
   -d '{
     "keywords": "data entry manual process",
     "location": "New York",
-    "notes": "Focus on finance sector",
-    "clientId": "550e8400-e29b-41d4-a716-446655440000"
+    "notes": "Focus on finance sector"
   }'
 ```
 
@@ -145,12 +198,15 @@ Our unique 5-pass analysis system provides comprehensive insights:
 ## 🛠️ Technology Stack
 
 - **Runtime**: Node.js 18+
-- **Language**: TypeScript
-- **Framework**: Next.js
-- **Database**: Supabase (PostgreSQL)
-- **Deployment**: Vercel
+- **Language**: TypeScript 5.3+
+- **Framework**: Next.js 14
+- **Database**: PostgreSQL (Prisma ORM)
+- **Cache**: Redis (with in-memory fallback)
+- **Deployment**: Vercel, Docker, or VPS
 - **Testing**: Jest + Playwright
+- **CI/CD**: GitHub Actions
 - **Documentation**: OpenAPI 3.0
+- **Containerization**: Docker + Docker Compose
 
 ## 📊 System Capabilities
 
@@ -163,24 +219,64 @@ Our unique 5-pass analysis system provides comprehensive insights:
 
 ## 🔐 Security
 
-- Admin-only access control
-- Bearer token authentication
-- Client ID-based multi-tenancy
-- Environment variable protection
-- Rate limiting and abuse prevention
+- **Multiple Authentication Methods**: API Keys, Bearer Tokens (JWT), Client ID
+- **Multi-Tenant Isolation**: Separate data per client
+- **Rate Limiting**: Per-tenant daily and concurrent limits
+- **CORS Protection**: Configurable allowed origins
+- **Security Headers**: HSTS, XSS Protection, Content-Type Options
+- **Environment-Based Config**: Secrets managed via environment variables
+- **Non-Root Docker Container**: Security-hardened containerization
+- **Database Security**: SSL/TLS support, row-level security ready
+
+See [SECURITY.md](./SECURITY.md) for comprehensive security documentation.
 
 ## 🚀 Deployment
 
-### Deploy to Vercel
+### Option 1: Deploy with Docker (Recommended)
+
+The easiest and most portable deployment option:
+
+```bash
+# Using Docker Compose
+docker-compose up -d
+
+# Or build and run manually
+docker build -t ai-lead-gen-pro .
+docker run -p 3000:3000 --env-file .env ai-lead-gen-pro
+```
+
+See [DOCKER.md](./DOCKER.md) for complete Docker deployment guide.
+
+### Option 2: Deploy to Vercel
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/cryptojym/ai-lead-gen-pro)
 
 1. Click the deploy button above
 2. Configure environment variables:
-   - `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `SUPABASE_ANON_KEY`
-   - `REDIS_URL` (required for caching and rate limiting)
-   - `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` (optional for enhanced analysis)
+   - `DATABASE_URL` - PostgreSQL connection string
+   - `REDIS_URL` - Redis connection (optional, uses in-memory if not set)
+   - `API_KEY` - Your API key for authentication
+   - `JWT_SECRET` - Secret for JWT token signing
+   - `ALLOWED_ORIGINS` - Comma-separated list of allowed CORS origins
 3. Deploy!
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
+
+### Option 3: Traditional VPS
+
+```bash
+# Install dependencies
+npm ci --omit=dev
+
+# Build application
+npm run build
+
+# Run migrations
+npx prisma migrate deploy
+
+# Start with PM2
+pm2 start npm --name "ai-leadgen" -- start
+```
 
 ### Environment Variables
 

@@ -14,23 +14,20 @@
     "MAX_CONCURRENT_RESEARCH_JOBS": "3",
     "ENABLE_CACHE": "false",
     "ENABLE_LLM_SYNTHESIS": "false",
-    "ENABLE_MOCK_MODE": "false"
+    "ENABLE_MOCK_MODE": "false",
+    "ALLOW_ANONYMOUS": "false"
   },
   "headers": [
     {
       "source": "/api/(.*)",
       "headers": [
         {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
           "key": "Access-Control-Allow-Methods",
           "value": "GET, POST, PUT, DELETE, OPTIONS"
         },
         {
           "key": "Access-Control-Allow-Headers",
-          "value": "X-Requested-With, Content-Type, Authorization, X-Client-ID"
+          "value": "X-Requested-With, Content-Type, Authorization, X-Client-ID, X-API-Key"
         }
       ]
     },

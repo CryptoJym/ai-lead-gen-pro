@@ -73,11 +73,23 @@ export interface CompanyFindings {
   research: Finding[];
 }
 
+export interface CorporateData {
+  name: string;
+  description?: string;
+  industry?: string;
+  founded?: string;
+  headquarters?: string;
+  employeeCount?: string;
+  revenue?: string;
+  website?: string;
+  [key: string]: string | undefined;
+}
+
 export interface OsintContext {
   companyName: string;
   domain: string;
   homepageUrl: string;
-  corp: any | null;
+  corp: CorporateData | null;
   news: NewsItem[];
   jobs: JobItem[];
   tech: TechSignal[];
